@@ -4,12 +4,12 @@ using RedarborEmployees.Infrastructure.Models;
 
 namespace RedarborEmployees.Infrastructure.Data
 {
-    internal class ApplicationDbContext    : DbContext
+    public class ApplicationDbContext : DbContext
     {
-        public ApplicationDbContext(DbContextOptions options) : base(options)
+        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
         }
-        public DbSet<EmployeeModel> Candidates => Set<EmployeeModel>();
+        public DbSet<EmployeeModel> Employees => Set<EmployeeModel>();
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

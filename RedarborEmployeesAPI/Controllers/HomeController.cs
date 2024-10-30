@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
-using RedarborEmployeesAPI.Models;
+using RedarborEmployees.Web.Models;
 using System.Diagnostics;
 
-namespace RedarborEmployeesAPI.Controllers
+namespace RedarborEmployees.Web.Controllers
 {
     public class HomeController : Controller
     {

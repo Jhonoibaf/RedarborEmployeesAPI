@@ -4,6 +4,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 17.11.35312.102
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RedarborEmployees.Web", "RedarborEmployeesAPI\RedarborEmployees.Web.csproj", "{0C084E17-A9F7-4446-80DD-C4562F1ECAF2}"
+	ProjectSection(ProjectDependencies) = postProject
+		{D5F43628-3FBA-4260-930A-35B57AFBB981} = {D5F43628-3FBA-4260-930A-35B57AFBB981}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RedarborEmployees.Infrastructure", "Redarbor.Employees.Infrastructure\RedarborEmployees.Infrastructure.csproj", "{D5F43628-3FBA-4260-930A-35B57AFBB981}"
 EndProject
