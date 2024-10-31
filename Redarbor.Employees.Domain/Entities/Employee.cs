@@ -1,8 +1,9 @@
 ﻿
 namespace RedarborEmployees.Domain.Entities
 {
-    internal class Employee
+    public class Employee
     {
+        public int EmployeeId { get; set; }
         public int CompanyId { get; set; }
         public string Email { get; set; }
         public string Fax { get; set; }

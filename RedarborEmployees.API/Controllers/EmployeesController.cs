@@ -1,38 +1,42 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using System.Runtime.InteropServices;
-
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+﻿using MediatR;
+using Microsoft.AspNetCore.Mvc;
+using RedarborEmployees.Application.DTOs;
+using RedarborEmployees.Application.EmployeesAdministration.Commands;
 
 namespace RedarborEmployees.Web.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/redarbor")]
     [ApiController]
-    public class EmployeesController : ControllerBase
+    public class EmployeesController(IMediator mediator) : ControllerBase
     {
-        // GET: api/<EmployeesController>
+        private readonly IMediator _mediator = mediator;
+
         [HttpGet]
         public IEnumerable<string> Get()
         {
             return new string[] { "value1", "value2" };
         }
 
-        // GET api/<EmployeesController>/5
         [HttpGet("{id}")]
         public string Get(int id)
         {
+            
             return "value";
         }
 
-        // POST api/<EmployeesController>
         [HttpPost]
-        public void Post([FromBody] string value)
+        public async Task<IActionResult> CreateEmployee([FromBody] EmployeeDto employeeDto)
         {
+            if (!ModelState.IsValid) return BadRequest(ModelState);
+            var employeeCreated = await _mediator.Send(new CreateEmployeeCommand.Command(employeeDto));
+            return employeeCreated != null ? StatusCode(200, employeeCreated.EmployeeId): StatusCode(500, "Employee not be created");
         }
 
-        // PUT api/<EmployeesController>/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public async Task<IActionResult> UpdateEmployee(int id , [FromBody] EmployeeDto employeeDto)
         {
+            var employeeUpdated = await _mediator.Send(new UpdateEmployeeCommand.Command(id , employeeDto));
+            return employeeUpdated != null ? StatusCode(200, $"Employee whit ID:{employeeUpdated.EmployeeId} has be updated") : StatusCode(500, "Employee not be Updated");
         }
 
         // DELETE api/<EmployeesController>/5

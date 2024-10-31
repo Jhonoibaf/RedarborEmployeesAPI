@@ -15,8 +15,9 @@ namespace RedarborEmployees.Infrastructure.Migrations
                 name: "Employees",
                 columns: table => new
                 {
-                    company_id = table.Column<int>(type: "int", nullable: false)
+                    employee_id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    company_id = table.Column<int>(type: "int", nullable: false),
                     email = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     fax = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
@@ -33,7 +34,7 @@ namespace RedarborEmployees.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Employees", x => x.company_id);
+                    table.PrimaryKey("PK_Employees", x => x.employee_id);
                 });
         }
 

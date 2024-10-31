@@ -1,5 +1,12 @@
+using FluentValidation;
+using MediatR.Extensions.FluentValidation.AspNetCore;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
+using RedarborEmployees.Application.Mappers;
 using RedarborEmployees.Infrastructure.Data;
+using RedarborEmployees.Application.EmployeesAdministration.Commands;
+using System.Text.Json.Serialization;
+using System.Text.Json;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,6 +23,19 @@ builder.Services.AddControllers();
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("AplicationDbConection"))
 );
+
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+        options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+        options.JsonSerializerOptions.Converters.Add(new RedarborEmployees.Application.DTOs.JsonDateTimeConverter());
+    });
+
+builder.Services.AddValidatorsFromAssembly(typeof(Program).Assembly);
+builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
+builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(typeof(CreateEmployeeCommand).Assembly));
+builder.Services.AddAutoMapper(typeof(MappingProfile));
 
 var app = builder.Build();
 

@@ -17,19 +17,23 @@ namespace RedarborEmployees.Infrastructure.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.8")
+                .HasAnnotation("ProductVersion", "8.0.10")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
             modelBuilder.Entity("RedarborEmployees.Infrastructure.Models.EmployeeModel", b =>
                 {
-                    b.Property<int>("CompanyId")
+                    b.Property<int>("EmployeeId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .HasColumnName("company_id");
+                        .HasColumnName("employee_id");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CompanyId"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("EmployeeId"));
+
+                    b.Property<int>("CompanyId")
+                        .HasColumnType("int")
+                        .HasColumnName("company_id");
 
                     b.Property<DateTime>("CreatedOn")
                         .HasColumnType("datetime2")
@@ -91,7 +95,7 @@ namespace RedarborEmployees.Infrastructure.Migrations
                         .HasColumnType("nvarchar(150)")
                         .HasColumnName("username");
 
-                    b.HasKey("CompanyId");
+                    b.HasKey("EmployeeId");
 
                     b.ToTable("Employees");
                 });

@@ -8,7 +8,10 @@ namespace RedarborEmployees.Infrastructure.Configurations
     {
         public void Configure(EntityTypeBuilder<EmployeeModel> builder)
         {
-            builder.HasKey(e => e.CompanyId); 
+            builder.HasKey(e => e.EmployeeId);
+            builder.Property(e => e.EmployeeId)
+                .HasColumnName("employee_id");
+
             builder.Property(e => e.CompanyId)
                 .HasColumnName("company_id")
                 .IsRequired();

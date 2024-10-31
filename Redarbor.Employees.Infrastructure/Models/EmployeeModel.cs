@@ -4,10 +4,11 @@ namespace RedarborEmployees.Infrastructure.Models
 {
     public class EmployeeModel
     {
+        public int EmployeeId { get; set; }
         public int CompanyId { get; set; }         
         public string Email { get; set; }          
-        public string Fax { get; set; }            
-        public string Name { get; set; }          
+        public string? Fax { get; set; }            
+        public string? Name { get; set; }          
         public DateTime LastLogin { get; set; }   
         public string Password { get; set; }        
         public int PortalId { get; set; }         
@@ -17,6 +18,6 @@ namespace RedarborEmployees.Infrastructure.Models
         public DateTime CreatedOn { get; set; }
         public DateTime? DeletedOn { get; set; } 
         public DateTime UpdatedOn { get; set; } 
-        public string Username { get; set; } 
+        public string Username { get; set; }
     }
 }
