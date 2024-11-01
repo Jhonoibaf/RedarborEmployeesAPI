@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using MediatR;
 using RedarborEmployees.Domain.Entities;
+using RedarborEmployees.Domain.Enums;
 using RedarborEmployees.Infrastructure.Data;
 
 namespace RedarborEmployees.Application.EmployeesAdministration.Commands
@@ -27,13 +28,13 @@ namespace RedarborEmployees.Application.EmployeesAdministration.Commands
                             throw new Exception("Employee not found");
                         }
 
-                        employeeModel.StatusId = 3;
+                        employeeModel.StatusId = (int)StatusId.Deleted;
                         employeeModel.DeletedOn = DateTime.Now;
                         employeeModel.UpdatedOn = DateTime.Now;
                         _dbcontext.Employees.Update(employeeModel);
                         await _dbcontext.SaveChangesAsync(cancellationToken);
-                        var candidate = _mapper.Map<Employee>(employeeModel);
-                        return candidate;
+                        var employee = _mapper.Map<Employee>(employeeModel);
+                        return employee;
                     }
                     catch (Exception ex)
                     {

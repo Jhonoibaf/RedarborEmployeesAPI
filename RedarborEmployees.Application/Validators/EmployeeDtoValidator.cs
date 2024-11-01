@@ -1,5 +1,6 @@
 ﻿using FluentValidation;
 using RedarborEmployees.Application.DTOs;
+using RedarborEmployees.Domain.Enums;
 using System.Collections.Generic;
 using System.ComponentModel;
 
@@ -18,8 +19,8 @@ namespace RedarborEmployees.Application.Validators
                 .MinimumLength(8).WithMessage("Password must be at least 8 characters long.")
                 .Matches(@"[!@#$%^&*(),.?\:{ }|<>]").WithMessage("Password must contain at least one special character.");
 
-        RuleFor(x => x.Username)
-            .NotEmpty().WithMessage("Username is required.");
+             RuleFor(x => x.Username)
+                .NotEmpty().WithMessage("Username is required.");
 
             RuleFor(x => x.LastLogin)
                 .LessThanOrEqualTo(DateTime.Now).WithMessage("LastLogin cannot be in the future.");
