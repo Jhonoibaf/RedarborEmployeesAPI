@@ -1,4 +1,4 @@
-﻿@model RedarborEmployees.Infrastructure.Models.EmployeeModel
+﻿@model RedarborEmployees.Application.DTOs.EmployeeDto
 
 @{
     ViewData["Title"] = "Details";
@@ -91,6 +91,6 @@
     </dl>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model?.CompanyId">Edit</a> |
+    <a asp-action="Edit" asp-route-id="@Model?.EmployeeId">Edit</a> |
     <a asp-action="Index">Back to List</a>
 </div>

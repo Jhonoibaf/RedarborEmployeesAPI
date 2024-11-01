@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using RedarborEmployees.Application.DTOs;
 using RedarborEmployees.Application.EmployeesAdministration.Commands;
+using RedarborEmployees.Application.EmployeesAdministration.Queries;
 
 namespace RedarborEmployees.Web.Controllers
 {
@@ -12,37 +13,45 @@ namespace RedarborEmployees.Web.Controllers
         private readonly IMediator _mediator = mediator;
 
         [HttpGet]
-        public IEnumerable<string> Get()
+        public async Task<ActionResult<EmployeeDto>> GetAllEmployees()
         {
-            return new string[] { "value1", "value2" };
+            var employees = await _mediator.Send(new GetAllEployeesQuery.Query());
+            return Ok(employees);
         }
 
         [HttpGet("{id}")]
-        public string Get(int id)
+        public async Task<ActionResult<EmployeeDto>> GetEmployeeById(int id)
         {
-            
-            return "value";
+            var employee = await _mediator.Send(new GetEmployeeByIdQuery.Query(id));
+            if (employee == null) return NotFound();
+            return Ok(employee);
         }
-
         [HttpPost]
         public async Task<IActionResult> CreateEmployee([FromBody] EmployeeDto employeeDto)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
             var employeeCreated = await _mediator.Send(new CreateEmployeeCommand.Command(employeeDto));
-            return employeeCreated != null ? StatusCode(200, employeeCreated.EmployeeId): StatusCode(500, "Employee not be created");
+            return employeeCreated != null ? 
+                StatusCode(201, employeeCreated.EmployeeId):
+                StatusCode(500, "Employee not be created");
         }
 
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateEmployee(int id , [FromBody] EmployeeDto employeeDto)
         {
             var employeeUpdated = await _mediator.Send(new UpdateEmployeeCommand.Command(id , employeeDto));
-            return employeeUpdated != null ? StatusCode(200, $"Employee whit ID:{employeeUpdated.EmployeeId} has be updated") : StatusCode(500, "Employee not be Updated");
+            return employeeUpdated != null ? 
+                StatusCode(200, $"Employee whit ID:{employeeUpdated.EmployeeId} has be updated"): 
+                StatusCode(500, "Employee not be Updated");
         }
 
-        // DELETE api/<EmployeesController>/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public async Task<IActionResult> DeleteEmployee(int id)
         {
+            var employeeDeleted = await _mediator.Send(new DeleteEmployeeCommand.Command(id));
+            return employeeDeleted != null ? 
+                StatusCode(200, $"Employee whit ID:{employeeDeleted.EmployeeId} has be updated"):
+                StatusCode(500, "Employee not be Updated");
         }
     }
 }

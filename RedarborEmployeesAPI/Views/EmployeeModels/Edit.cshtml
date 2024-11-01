@@ -1,4 +1,4 @@
-﻿@model RedarborEmployees.Infrastructure.Models.EmployeeModel
+﻿@model RedarborEmployees.Application.DTOs.EmployeeDto
 
 @{
     ViewData["Title"] = "Edit";
@@ -10,9 +10,9 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Edit">
+        <form asp-action="EditEmployee">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="CompanyId" />
+            <input type="hidden" asp-for="EmployeeId" />
             <div class="form-group">
                 <label asp-for="Email" class="control-label"></label>
                 <input asp-for="Email" class="form-control" />

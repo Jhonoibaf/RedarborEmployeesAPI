@@ -7,8 +7,12 @@ using RedarborEmployees.Infrastructure.Data;
 using RedarborEmployees.Application.EmployeesAdministration.Commands;
 using System.Text.Json.Serialization;
 using System.Text.Json;
+using Microsoft.Data.SqlClient;
+using System.Data;
 
 var builder = WebApplication.CreateBuilder(args);
+
+Dapper.DefaultTypeMap.MatchNamesWithUnderscores = true;
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddControllers();
@@ -23,6 +27,11 @@ builder.Services.AddControllers();
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("AplicationDbConection"))
 );
+builder.Services.AddTransient<IDbConnection>(sp =>
+{
+    var connectionString = builder.Configuration.GetConnectionString("AplicationDbConection");
+    return new SqlConnection(connectionString);
+});
 
 builder.Services.AddControllers()
     .AddJsonOptions(options =>

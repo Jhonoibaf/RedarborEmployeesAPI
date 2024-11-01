@@ -5,11 +5,6 @@ using RedarborEmployees.Application.DTOs;
 using RedarborEmployees.Application.Validators;
 using RedarborEmployees.Domain.Entities;
 using RedarborEmployees.Infrastructure.Data;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RedarborEmployees.Application.EmployeesAdministration.Commands
 {
@@ -41,9 +36,10 @@ namespace RedarborEmployees.Application.EmployeesAdministration.Commands
                 var employeeDb = await _dbcontext.Employees
                                         .FirstOrDefaultAsync(e => e.EmployeeId == request.employeeId, cancellationToken);
 
-                if (employeeDb == null) throw new Exception("Candidate not found");
+                if (employeeDb == null) throw new Exception("Employee not found");
 
                 _mapper.Map(request.Employee, employeeDb);
+                employeeDb.UpdatedOn = DateTime.Now;
                 _dbcontext.Update(employeeDb);
                 await _dbcontext.SaveChangesAsync(cancellationToken);
 
@@ -53,4 +49,4 @@ namespace RedarborEmployees.Application.EmployeesAdministration.Commands
         public record Response(Employee employee);
     }
 }
-}
+

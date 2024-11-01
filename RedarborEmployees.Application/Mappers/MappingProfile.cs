@@ -13,8 +13,10 @@ namespace RedarborEmployees.Application.Mappers
             CreateMap<EmployeeDto, Employee>();
             CreateMap<EmployeeModel, Employee>();
             CreateMap<Employee, EmployeeModel>();
+            CreateMap<EmployeeDto, EmployeeModel>()
+                     .ForMember(dest => dest.EmployeeId, opt => opt.Ignore());
             CreateMap<CreateEmployeeCommand.Command, Employee>()
-            .ForMember(dest => dest.EmployeeId, opt => opt.Ignore());
+             .ForMember(dest => dest.EmployeeId, opt => opt.Ignore());
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿@model RedarborEmployees.Infrastructure.Models.EmployeeModel
+﻿@model RedarborEmployees.Application.DTOs.EmployeeDto
 
 @{
     ViewData["Title"] = "Delete";
@@ -92,7 +92,7 @@
     </dl>
     
     <form asp-action="Delete">
-        <input type="hidden" asp-for="CompanyId" />
+        <input type="hidden" asp-for="EmployeeId" />
         <input type="submit" value="Delete" class="btn btn-danger" /> |
         <a asp-action="Index">Back to List</a>
     </form>
