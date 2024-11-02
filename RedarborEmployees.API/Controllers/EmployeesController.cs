@@ -30,10 +30,12 @@ namespace RedarborEmployees.API.Controllers
         public async Task<IActionResult> CreateEmployee([FromBody] EmployeeDto employeeDto)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
-            var employeeCreated = await _mediator.Send(new CreateEmployeeCommand.Command(employeeDto));
-            return employeeCreated != null ? 
-                StatusCode(201, employeeCreated.EmployeeId):
-                StatusCode(500, "Employee not be created");
+
+            var result = await _mediator.Send(new CreateEmployeeCommand.Command(employeeDto));
+
+            if (!result.IsSuccess) return BadRequest(result.ErrorMessage);
+
+            return StatusCode(201, result.Data.EmployeeId);
         }
 
         [HttpPut("{id}")]
