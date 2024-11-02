@@ -41,10 +41,13 @@ namespace RedarborEmployees.API.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateEmployee(int id , [FromBody] EmployeeDto employeeDto)
         {
-            var employeeUpdated = await _mediator.Send(new UpdateEmployeeCommand.Command(id , employeeDto));
-            return employeeUpdated != null ? 
-                StatusCode(200, $"Employee whit ID:{employeeUpdated.EmployeeId} has be updated"): 
-                StatusCode(500, "Employee not be Updated");
+            var result = await _mediator.Send(new UpdateEmployeeCommand.Command(id, employeeDto));
+
+            if (result.IsSuccess) return Ok($"Employee with ID: {result.Data.EmployeeId} has been updated");
+
+            return result.ErrorMessage == "Employee not found"
+                ? NotFound(result.ErrorMessage)
+                : BadRequest(result.ErrorMessage);
         }
 
         [HttpDelete("{id}")]
@@ -52,8 +55,8 @@ namespace RedarborEmployees.API.Controllers
         {
             var employeeDeleted = await _mediator.Send(new DeleteEmployeeCommand.Command(id));
             return employeeDeleted != null ? 
-                StatusCode(200, $"Employee whit ID:{employeeDeleted.EmployeeId} has be updated"):
-                StatusCode(500, "Employee not be Updated");
+                StatusCode(200, $"Employee whit ID:{employeeDeleted.EmployeeId} has be deleted"):
+                StatusCode(500, "Employee not be deleted");
         }
     }
 }
