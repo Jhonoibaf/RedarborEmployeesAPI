@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using FluentValidation;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using RedarborEmployees.Application.DTOs;
@@ -30,10 +31,22 @@ namespace RedarborEmployees.Application.EmployeesAdministration.Commands
             {
                 _mapper = mapper;
                 _dbcontext = dbcontext;
+                _validator = new EmployeeDtoValidator();
             }
             public async Task<Employee> Handle(Command request, CancellationToken cancellationToken)
             {
-                ValidateRequest(request);
+                var validationResult = _validator.Validate(request.Employee);
+                if (!validationResult.IsValid)
+                {
+                    var errorMessages = string.Join(", ", validationResult.Errors.Select(e => e.ErrorMessage));
+                    throw new Exception(errorMessages);
+                }
+
+                var emailRegister = await _dbcontext.Employees
+                                     .AnyAsync(e => e.Email == request.Employee.Email);
+
+                if (emailRegister) throw new Exception("The email address is already in use.");
+
                 var employee = _mapper.Map<Employee>(request.Employee);
                 employee.Validate();
 
@@ -45,23 +58,8 @@ namespace RedarborEmployees.Application.EmployeesAdministration.Commands
 
                 return _mapper.Map<Employee>(employeeDb);
             }
-
-            private async void ValidateRequest(Command request)
-            {
-                var validationResult = _validator.Validate(request.Employee);
-                if (!validationResult.IsValid)
-                {
-                    var errorMessages = string.Join(", ", validationResult.Errors.Select(e => e.ErrorMessage));
-                    throw new Exception(errorMessages);
-                }
-
-                var emailRegister= await _dbcontext.Employees
-                                     .AnyAsync(e => e.Email == request.Employee.Email);
-
-                if (emailRegister) throw new Exception("The email address is already in use.");
-            }
         }
     }
 
-    public record Response (Employee Employee);
+    public record Response(Employee Employee);
 }

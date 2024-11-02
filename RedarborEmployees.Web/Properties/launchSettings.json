@@ -16,7 +16,7 @@
       "applicationUrl": "http://localhost:5124",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
-        "ConnectionStrings__AplicationDbConection": "Server=LAPTOP-1J57GK4I\\SQLEXPRESS;Database=RedarborEmployeesDev;Trusted_Connection=True;TrustServerCertificate=True;"
+        "ConnectionStrings__ApplicationDbConection": "Server=LAPTOP-1J57GK4I\\SQLEXPRESS;Database=RedarborEmployeesDev;Trusted_Connection=True;TrustServerCertificate=True;"
       }
     },
     "IIS Express": {

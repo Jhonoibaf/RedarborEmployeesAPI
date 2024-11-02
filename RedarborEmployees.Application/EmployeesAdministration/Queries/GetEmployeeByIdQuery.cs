@@ -25,21 +25,16 @@ namespace RedarborEmployees.Application.EmployeesAdministration.Queries
             {
                 const string sql = @"SELECT *
                                  FROM Employees
-                                 WHERE employee_id = @EmployeeId";
+                                 WHERE employee_id = @EmployeeId AND status_id != @DeletedStatusId";
 
                 using (var connection = _dbConnection)
                 {
                     if (connection.State == ConnectionState.Closed)
                         connection.Open();
 
-                    var employee = await connection.QueryFirstOrDefaultAsync<EmployeeDto>(sql, new { EmployeeId = request.employeeId });
+                    var employee = await connection.QueryFirstOrDefaultAsync<EmployeeDto>(sql, new { EmployeeId = request.employeeId, DeletedStatusId = (int)StatusId.Deleted });
 
-                    if (employee == null || employee.StatusId == (int)StatusId.Deleted)
-                    {
-                        throw new Exception("Employee not found");
-                    }
-
-                    return employee;
+                    return employee ?? new EmployeeDto();
                 }
             }
         }

@@ -26,7 +26,8 @@ namespace RedarborEmployees.Application.Validators
                 .LessThanOrEqualTo(DateTime.Now).WithMessage("LastLogin cannot be in the future.");
 
             RuleFor(x => x.StatusId)
-                .IsInEnum().WithMessage("StatusId must be a valid status.");
+             .Must(statusId => Enum.IsDefined(typeof(StatusId), statusId) && statusId != (int)StatusId.Deleted)
+             .WithMessage("StatusId must be a valid status and less than 3.");
 
         }
 

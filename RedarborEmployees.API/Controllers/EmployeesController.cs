@@ -23,7 +23,7 @@ namespace RedarborEmployees.API.Controllers
         public async Task<ActionResult<EmployeeDto>> GetEmployeeById(int id)
         {
             var employee = await _mediator.Send(new GetEmployeeByIdQuery.Query(id));
-            if (employee == null) return NotFound();
+            if (employee.EmployeeId == 0 ) return NotFound();
             return Ok(employee);
         }
         [HttpPost]

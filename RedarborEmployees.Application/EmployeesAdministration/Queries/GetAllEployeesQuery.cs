@@ -2,7 +2,6 @@
 using Dapper;
 using MediatR;
 using RedarborEmployees.Application.DTOs;
-using RedarborEmployees.Domain.Entities;
 using RedarborEmployees.Domain.Enums;
 using System.Data;
 
@@ -24,7 +23,7 @@ namespace RedarborEmployees.Application.EmployeesAdministration.Queries
 
             public async Task<List<EmployeeDto>> Handle(Query request, CancellationToken cancellationToken)
             {
-                const string sql = @"SELECT * FROM Employees WHERE StatusId != @DeletedStatusId";
+                const string sql = @"SELECT * FROM Employees WHERE status_id != @DeletedStatusId";
 
                 using (var connection = _dbConnection)
                 {

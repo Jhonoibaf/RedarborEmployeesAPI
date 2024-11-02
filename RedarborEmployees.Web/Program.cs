@@ -17,19 +17,18 @@ Dapper.DefaultTypeMap.MatchNamesWithUnderscores = true;
 builder.Services.AddControllersWithViews();
 builder.Services.AddControllers();
 
-//var connectionString = Environment.GetEnvironmentVariable("ConnectionStrings__AplicationDbConection");
+var connectionString = Environment.GetEnvironmentVariable("ConnectionStrings__ApplicationDbConection");
 
-//if (string.IsNullOrEmpty(connectionString))
-//{
-//    throw new InvalidOperationException("Connection string not found in environment variables.");
-//}
+if (string.IsNullOrEmpty(connectionString))
+{
+    throw new InvalidOperationException("Connection string not found in environment variables.");
+}
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("AplicationDbConection"))
+    options.UseSqlServer(connectionString)
 );
 builder.Services.AddTransient<IDbConnection>(sp =>
 {
-    var connectionString = builder.Configuration.GetConnectionString("AplicationDbConection");
     return new SqlConnection(connectionString);
 });
 
