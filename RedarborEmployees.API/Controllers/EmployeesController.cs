@@ -4,7 +4,7 @@ using RedarborEmployees.Application.DTOs;
 using RedarborEmployees.Application.EmployeesAdministration.Commands;
 using RedarborEmployees.Application.EmployeesAdministration.Queries;
 
-namespace RedarborEmployees.Web.Controllers
+namespace RedarborEmployees.API.Controllers
 {
     [Route("api/redarbor")]
     [ApiController]
