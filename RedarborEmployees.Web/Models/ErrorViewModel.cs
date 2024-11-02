@@ -1,4 +1,4 @@
-namespace RedarborEmployeesAPI.Models
+namespace RedarborEmployees.Web.Models
 {
     public class ErrorViewModel
     {
