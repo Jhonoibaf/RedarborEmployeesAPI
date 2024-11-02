@@ -7,13 +7,12 @@ using RedarborEmployees.Application.Validators;
 using RedarborEmployees.Domain.Entities;
 using RedarborEmployees.Infrastructure.Data;
 using RedarborEmployees.Infrastructure.Models;
-using System.Threading;
 
 namespace RedarborEmployees.Application.EmployeesAdministration.Commands
 {
     public class CreateEmployeeCommand
     {
-        public class Command : IRequest<Employee>
+        public class Command : IRequest<Result<Employee>>
         {
             public EmployeeDto Employee { get; }
             public Command(EmployeeDto employee)
@@ -21,7 +20,8 @@ namespace RedarborEmployees.Application.EmployeesAdministration.Commands
                 Employee = employee;
             }
         }
-        public class Handler : IRequestHandler<Command, Employee>
+
+        public class Handler : IRequestHandler<Command, Result<Employee>>
         {
             private readonly ApplicationDbContext _dbcontext;
             private readonly IMapper _mapper;
@@ -33,33 +33,34 @@ namespace RedarborEmployees.Application.EmployeesAdministration.Commands
                 _dbcontext = dbcontext;
                 _validator = new EmployeeDtoValidator();
             }
-            public async Task<Employee> Handle(Command request, CancellationToken cancellationToken)
+
+            public async Task<Result<Employee>> Handle(Command request, CancellationToken cancellationToken)
             {
                 var validationResult = _validator.Validate(request.Employee);
                 if (!validationResult.IsValid)
                 {
                     var errorMessages = string.Join(", ", validationResult.Errors.Select(e => e.ErrorMessage));
-                    throw new Exception(errorMessages);
+                    return Result<Employee>.Failure(errorMessages);
                 }
 
                 var emailRegister = await _dbcontext.Employees
-                                     .AnyAsync(e => e.Email == request.Employee.Email);
+                                      .AnyAsync(e => e.Email == request.Employee.Email);
 
-                if (emailRegister) throw new Exception("The email address is already in use.");
+                if (emailRegister)
+                    return Result<Employee>.Failure("The email address is already in use.");
 
                 var employee = _mapper.Map<Employee>(request.Employee);
                 employee.Validate();
 
                 var employeeDb = _mapper.Map<EmployeeModel>(employee)
-                                 ?? throw new Exception("Employee could not be created");
+                                  ?? throw new Exception("Employee could not be created");
 
                 _dbcontext.Employees.Add(employeeDb);
                 await _dbcontext.SaveChangesAsync(cancellationToken);
 
-                return _mapper.Map<Employee>(employeeDb);
+                return Result<Employee>.Success(_mapper.Map<Employee>(employeeDb));
             }
         }
     }
-
     public record Response(Employee Employee);
 }

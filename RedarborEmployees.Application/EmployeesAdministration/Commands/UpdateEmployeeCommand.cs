@@ -10,8 +10,8 @@ namespace RedarborEmployees.Application.EmployeesAdministration.Commands
 {
     public class UpdateEmployeeCommand
     {
-        public record Command(int employeeId, EmployeeDto Employee) : IRequest<Employee>;
-        public class Handler : IRequestHandler<Command, Employee>
+        public record Command(int employeeId, EmployeeDto Employee) : IRequest<Result<Employee>>;
+        public class Handler : IRequestHandler<Command, Result<Employee>>
         {
             private readonly ApplicationDbContext _dbcontext;
             private readonly IMapper _mapper;
@@ -24,26 +24,26 @@ namespace RedarborEmployees.Application.EmployeesAdministration.Commands
                 _validator = new EmployeeDtoValidator();
             }
 
-            public async Task<Employee> Handle(Command request, CancellationToken cancellationToken)
+            public async Task<Result<Employee>> Handle(Command request, CancellationToken cancellationToken)
             {
                 var validationResult = _validator.Validate(request.Employee);
                 if (!validationResult.IsValid)
                 {
                     var errorMessages = string.Join(", ", validationResult.Errors.Select(e => e.ErrorMessage));
-                    throw new Exception(errorMessages);
+                    return Result<Employee>.Failure(errorMessages);
                 }
 
                 var employeeDb = await _dbcontext.Employees
-                                        .FirstOrDefaultAsync(e => e.EmployeeId == request.employeeId, cancellationToken);
+                                    .FirstOrDefaultAsync(e => e.EmployeeId == request.employeeId, cancellationToken);
 
-                if (employeeDb == null) throw new Exception("Employee not found");
+                if (employeeDb == null) return Result<Employee>.Failure("Employee not found");
 
                 _mapper.Map(request.Employee, employeeDb);
                 employeeDb.UpdatedOn = DateTime.Now;
                 _dbcontext.Update(employeeDb);
                 await _dbcontext.SaveChangesAsync(cancellationToken);
 
-                return _mapper.Map<Employee>(employeeDb);
+                return Result<Employee>.Success(_mapper.Map<Employee>(employeeDb));
             }
         }
         public record Response(Employee employee);

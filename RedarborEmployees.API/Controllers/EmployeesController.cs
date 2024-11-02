@@ -30,19 +30,24 @@ namespace RedarborEmployees.API.Controllers
         public async Task<IActionResult> CreateEmployee([FromBody] EmployeeDto employeeDto)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
-            var employeeCreated = await _mediator.Send(new CreateEmployeeCommand.Command(employeeDto));
-            return employeeCreated != null ? 
-                StatusCode(201, employeeCreated.EmployeeId):
-                StatusCode(500, "Employee not be created");
+
+            var result = await _mediator.Send(new CreateEmployeeCommand.Command(employeeDto));
+
+            if (!result.IsSuccess) return BadRequest(result.ErrorMessage);
+
+            return StatusCode(201, result.Data.EmployeeId);
         }
 
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateEmployee(int id , [FromBody] EmployeeDto employeeDto)
         {
-            var employeeUpdated = await _mediator.Send(new UpdateEmployeeCommand.Command(id , employeeDto));
-            return employeeUpdated != null ? 
-                StatusCode(200, $"Employee whit ID:{employeeUpdated.EmployeeId} has be updated"): 
-                StatusCode(500, "Employee not be Updated");
+            var result = await _mediator.Send(new UpdateEmployeeCommand.Command(id, employeeDto));
+
+            if (result.IsSuccess) return Ok($"Employee with ID: {result.Data.EmployeeId} has been updated");
+
+            return result.ErrorMessage == "Employee not found"
+                ? NotFound(result.ErrorMessage)
+                : BadRequest(result.ErrorMessage);
         }
 
         [HttpDelete("{id}")]
@@ -50,8 +55,8 @@ namespace RedarborEmployees.API.Controllers
         {
             var employeeDeleted = await _mediator.Send(new DeleteEmployeeCommand.Command(id));
             return employeeDeleted != null ? 
-                StatusCode(200, $"Employee whit ID:{employeeDeleted.EmployeeId} has be updated"):
-                StatusCode(500, "Employee not be Updated");
+                StatusCode(200, $"Employee whit ID:{employeeDeleted.EmployeeId} has be deleted"):
+                StatusCode(500, "Employee not be deleted");
         }
     }
 }
