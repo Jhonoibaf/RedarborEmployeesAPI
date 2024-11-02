@@ -18,6 +18,7 @@ services:
       dockerfile: Dockerfile
     environment:
       ConnectionStrings__ApplicationDbConection: "Server=sqlserver;Database=RedarborEmployeesDev;User Id=sa;Password=Passw0rd!;TrustServerCertificate=True;MultipleActiveResultSets=true"
+      ASPNETCORE_ENVIRONMENT: "Development"
     ports:
       - "8080:8080"
     depends_on:

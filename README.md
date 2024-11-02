@@ -60,4 +60,5 @@ Para ejecutar el proyecto localmente y levantar el entorno, sigue los siguientes
    docker-compose up --build
 
    Este comando construirá las imágenes de Docker y ejecutará los contenedores para la API de RedarborEmployeesAPI y la base de datos SQL Server.
-4. Si prefieres ejecutar el proyecto localmente sin Docker, asegúrate de configurar correctamente las variables de entorno en el archivo launchSettings.json. Necesitarás ajustar las cadenas de conexión en una variable de entorno **ConnectionStrings__AplicationDbConection.**
+4. Si prefieres ejecutar el proyecto localmente sin Docker, asegúrate de configurar correctamente las variables de entorno en el archivo launchSettings.json. Necesitarás ajustar las cadenas de conexión en una variable de entorno **ConnectionStrings__ApplicationDbConection.**
+5. Puedes usar la coleccion que se encuentra en la raiz de este repositorio, si estas corriendo el proyecto en docker el puerto será el 8080.
